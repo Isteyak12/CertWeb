@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📧Certifying!</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            flex-direction: column;
+        }
+        
+        .input-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+        
+        .box {
+            width: 200px;
+            height: 100px;
+            margin: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #f0f0f0;
+            border: 1px solid #ccc;
+            text-align: center;
+            position: relative; /* Ensure positioning within the container */
+        }
+        
+        .box input {
+            position: absolute;
+            bottom: 5px;
+            left: 5px;
+            width: calc(100% - 10px);
+            padding: 5px;
+            box-sizing: border-box;
+        }
+        
+        button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <div class="input-container">
+        <div class="box" id="box1">
+            Name
+            <input type="text" id="name" placeholder="Enter your name">
+        </div>
+        <div class="box" id="box2">
+            Date of Birth
+            <input type="date" id="dob">
+        </div>
+        <div class="box" id="box3">
+            Driver's License
+            <input type="text" id="license" placeholder="Enter driver's license">
+        </div>
+        <div class="box" id="box4">
+            Email
+            <input type="email" id="email" placeholder="Enter your email">
+        </div>
+    </div>
+
+    <button id="save-btn">Save to JSON</button>
+
+    <script>
+        document.getElementById('save-btn').addEventListener('click', () => {
+            const name = document.getElementById('name').value;
+            const dob = document.getElementById('dob').value;
+            const license = document.getElementById('license').value;
+            const email = document.getElementById('email').value;
+
+            const data = {
+                name: name,
+                dob: dob,
+                license: license,
+                email: email
+            };
+
+            fetch('/save-data', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.text())
+            .then(data => {
+                alert('Data saved successfully: ' + data);
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
+        });
+    </script>
+</body>
+</html>
