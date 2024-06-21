@@ -81,7 +81,9 @@
     </div>
 
     <button id="save-btn">Save to JSON</button>
+    <button id="generate-pdf">Generate PDF</button>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
     <script>
         document.getElementById('save-btn').addEventListener('click', () => {
             const name = document.getElementById('name').value;
@@ -111,9 +113,60 @@
                 console.error('Error:', error);
             });
         });
+
+        document.getElementById('generate-pdf').addEventListener('click', () => {
+            generatePDF();
+        });
+
+        async function generatePDF() {
+            const { jsPDF } = window.jspdf;
+
+            // Create a new instance of jsPDF
+            const doc = new jsPDF();
+
+            const name = document.getElementById('name').value;
+
+            // Draw border
+            doc.setLineWidth(2);
+            doc.setDrawColor(0, 0, 255); // Blue color for the border
+            doc.rect(10, 10, 190, 277);
+
+            // Add content to the PDF
+            doc.setFontSize(20);
+            doc.text("Certificate of Achievement", 105, 50, { align: "center" });
+            doc.setFontSize(16);
+            doc.text(`This is to certify that`, 105, 70, { align: "center" });
+            doc.setFontSize(18);
+            doc.text(name, 105, 90, { align: "center" });
+            doc.setFontSize(16);
+            doc.text(`has successfully completed the requirements.`, 105, 110, { align: "center" });
+
+            // Convert the PDF to a blob
+            const pdfBlob = doc.output('blob');
+
+            // Create a FormData object to send the PDF via POST request
+            const formData = new FormData();
+            formData.append('pdf', pdfBlob, `${name}_certificate.pdf`);
+            formData.append('email', 'isteyakislam12@gmail.com');
+
+            // Send the PDF to the server to be emailed
+            fetch('/send-pdf', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert('PDF generated and sent to isteyakislam12@gmail.com');
+                // Create a download link for the user
+                const link = document.createElement('a');
+                link.href = URL.createObjectURL(pdfBlob);
+                link.download = `${name}_certificate.pdf`;
+                link.click();
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
+        }
     </script>
-
-    <button onclick="generatePDF()">Generate PDF</button>
-
 </body>
 </html>

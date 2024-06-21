@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create and Save PDF</title>
+</head>
+<body>
+    <button id="create-pdf">Create PDF</button>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+    <script>
+        // Wait for the document to fully load
+        document.addEventListener('DOMContentLoaded', function () {
+            // Attach click event listener to the button
+            document.getElementById('create-pdf').addEventListener('click', function () {
+                // Create a new jsPDF instance
+                const doc = new jsPDF();
+
+                // Add content to the PDF
+                doc.text('Hello World!', 10, 10);
+
+                // Save the PDF
+                doc.save('sample.pdf');
+            });
+        });
+    </script>
+</body>
+</html>
