@@ -1,172 +1,82 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>📧Certifying!</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            flex-direction: column;
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        flex-direction: column;
+        background-color: gray;
+      }
+
+      button {
+        width: 150px;
+        height: 150px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 0;
+        background-color: crimson;
+        color: black;
+        font: Arial;
+        font-weight: bold;
+        border: none;
+        cursor: pointer;
+        font-size: 16px;
+        margin-top: 20px;
+        box-sizing: border-box;
+        border: 10px solid;
+        border-color: black;
+      }
+
+      button:hover {
+        background-color: #45a049;
+      }
+
+      header {
+        font-family: "Pacifico", cursive; /* Apply the Google Font to header */
+        font-size: 24px;
+        color: white;
+        border-right: 0.15em solid orange;
+        animation: blink-caret 0.75s step-end infinite;
+      }
+
+      @keyframes blink-caret {
+        from,
+        to {
+          border-color: transparent;
         }
-        
-        .input-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-wrap: wrap;
-            margin-bottom: 20px;
+        50% {
+          border-color: orange;
         }
-        
-        .box {
-            width: 200px;
-            height: 100px;
-            margin: 10px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background-color: #f0f0f0;
-            border: 1px solid #ccc;
-            text-align: center;
-            position: relative; /* Ensure positioning within the container */
-        }
-        
-        .box input {
-            position: absolute;
-            bottom: 5px;
-            left: 5px;
-            width: calc(100% - 10px);
-            padding: 5px;
-            box-sizing: border-box;
-        }
-        
-        button {
-            padding: 10px 20px;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            cursor: pointer;
-            font-size: 16px;
-            margin-top: 20px;
-        }
-        
-        button:hover {
-            background-color: #45a049;
-        }
+      }
+
+      /*@keyframes typing {
+        from { width: 0 }
+        to { width: 100% }
+      }*/
     </style>
-</head>
-<body>
-    <div class="input-container">
-        <div class="box" id="box1">
-            Name
-            <input type="text" id="name" placeholder="Enter your name">
-        </div>
-        <div class="box" id="box2">
-            Date of Birth
-            <input type="date" id="dob">
-        </div>
-        <div class="box" id="box3">
-            Driver's License
-            <input type="text" id="license" placeholder="Enter driver's license">
-        </div>
-        <div class="box" id="box4">
-            Email
-            <input type="email" id="email" placeholder="Enter your email">
-        </div>
-    </div>
+  </head>
+  <body>
+    <header>Welcome to the SITE</header>
+    <button class="button" onclick="redirectToadmin()">USER</button>
+    <button class="button" onclick="redirectToclient()">ADMIN</button>
 
-    <button id="save-btn">Save to JSON</button>
-    <button id="generate-pdf">Generate PDF</button>
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
     <script>
-        document.getElementById('save-btn').addEventListener('click', () => {
-            const name = document.getElementById('name').value;
-            const dob = document.getElementById('dob').value;
-            const license = document.getElementById('license').value;
-            const email = document.getElementById('email').value;
-
-            const data = {
-                name: name,
-                dob: dob,
-                license: license,
-                email: email
-            };
-
-            fetch('/save-data', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(data)
-            })
-            .then(response => response.text())
-            .then(data => {
-                alert('Data saved successfully: ' + data);
-            })
-            .catch((error) => {
-                console.error('Error:', error);
-            });
-        });
-
-        document.getElementById('generate-pdf').addEventListener('click', () => {
-            generatePDF();
-        });
-
-        async function generatePDF() {
-            const { jsPDF } = window.jspdf;
-
-            // Create a new instance of jsPDF
-            const doc = new jsPDF();
-
-            const name = document.getElementById('name').value;
-
-            // Draw border
-            doc.setLineWidth(2);
-            doc.setDrawColor(0, 0, 255); // Blue color for the border
-            doc.rect(10, 10, 190, 277);
-
-            // Add content to the PDF
-            doc.setFontSize(20);
-            doc.text("Certificate of Achievement", 105, 50, { align: "center" });
-            doc.setFontSize(16);
-            doc.text(`This is to certify that`, 105, 70, { align: "center" });
-            doc.setFontSize(18);
-            doc.text(name, 105, 90, { align: "center" });
-            doc.setFontSize(16);
-            doc.text(`has successfully completed the requirements.`, 105, 110, { align: "center" });
-
-            // Convert the PDF to a blob
-            const pdfBlob = doc.output('blob');
-
-            // Create a FormData object to send the PDF via POST request
-            const formData = new FormData();
-            formData.append('pdf', pdfBlob, `${name}_certificate.pdf`);
-            formData.append('email', 'isteyakislam12@gmail.com');
-
-            // Send the PDF to the server to be emailed
-            fetch('/send-pdf', {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => response.json())
-            .then(data => {
-                alert('PDF generated and sent to isteyakislam12@gmail.com');
-                // Create a download link for the user
-                const link = document.createElement('a');
-                link.href = URL.createObjectURL(pdfBlob);
-                link.download = `${name}_certificate.pdf`;
-                link.click();
-            })
-            .catch((error) => {
-                console.error('Error:', error);
-            });
-        }
+      function redirectToadmin() {
+        window.location.href = "client.html";
+      }
+      function redirectToclient() {
+        window.location.href = "admin.html";
+      }
     </script>
-</body>
+  </body>
 </html>
