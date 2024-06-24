@@ -1,232 +1,260 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>📧Certifying!</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 0;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      flex-direction: column;
-      background-color: #f0f0f0;
-    }
-
-    .hidden {
-      display: none;
-    }
-
-    .button-container {
-      text-align: center;
-    }
-
-    .button {
-      padding: 10px 20px;
-      background-color: #4caf50;
-      color: white;
-      border: none;
-      cursor: pointer;
-      font-size: 16px;
-      margin: 10px;
-    }
-
-    .button:hover {
-      background-color: #45a049;
-    }
-
-    .input-container {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      flex-wrap: wrap;
-      margin-bottom: 20px;
-    }
-
-    .box {
-      width: 200px;
-      height: 100px;
-      margin: 10px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      background-color: lightcoral;
-      border: 1px solid red;
-      text-align: center;
-      position: relative; /* Ensure positioning within the container */
-    }
-
-    .box input {
-      position: absolute;
-      bottom: 5px;
-      left: 5px;
-      width: calc(100% - 10px);
-      padding: 5px;
-      box-sizing: border-box;
-    }
-
-    button {
-      padding: 10px 20px;
-      background-color: #4caf50;
-      color: white;
-      border: none;
-      cursor: pointer;
-      font-size: 16px;
-      margin-top: 20px;
-    }
-
-    button:hover {
-      background-color: #45a049;
-    }
-
-    .error-message {
-      color: red;
-      margin-top: 5px;
-      font-size: 14px;
-    }
-
-    .pdf-container {
-      width: 100%;
-      height: 600px;
-      margin-top: 20px;
-    }
-
-    iframe {
-      width: 100%;
-      height: 100%;
-      border: none;
-    }
-  </style>
-</head>
-<body>
-  <div class="input-container">
-    <div class="box" id="box1">
-      Name
-      <input type="text" id="name" placeholder="Enter your name" required>
-      <div id="name-error" class="error-message"></div>
-    </div>
-    <div class="box" id="box2">
-      Date of Birth
-      <input type="date" id="dob">
-    </div>
-    <div class="box" id="box3">
-      Driver's License
-      <input type="text" id="license" placeholder="Enter driver's license">
-    </div>
-    <div class="box" id="box4">
-      Email
-      <input type="email" id="email" placeholder="Enter your email" required>
-      <div id="email-error" class="error-message"></div>
-    </div>
-  </div>
-
-  <button id="save-btn">SAVE!</button>
-  <button id="generate-pdf">Generate PDF</button>
-
-  <div class="pdf-container hidden" id="pdf-container">
-    <iframe id="pdf-viewer"></iframe>
-  </div>
-
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
-  <script>
-    document.getElementById("save-btn").addEventListener("click", () => {
-      const name = document.getElementById("name").value;
-      const dob = document.getElementById("dob").value;
-      const license = document.getElementById("license").value;
-      const email = document.getElementById("email").value;
-
-      // Simple validation for required fields
-      if (!name.trim()) {
-        document.getElementById("name-error").textContent =
-          "Name is required";
-        return;
-      } else {
-        document.getElementById("name-error").textContent = "";
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>📧Certifying!</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        flex-direction: column;
+        background-color: #f0f0f0;
       }
 
-      if (!email.trim()) {
-        document.getElementById("email-error").textContent =
-          "Email is required";
-        return;
-      } else {
-        document.getElementById("email-error").textContent = "";
+      .hidden {
+        display: none;
       }
 
-      const data = {
-        name: name,
-        dob: dob,
-        license: license,
-        email: email,
-      };
+      .button-container {
+        text-align: center;
+      }
 
-      fetch("/save-data", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      })
-        .then((response) => response.text())
-        .then((data) => {
-          alert("Data saved successfully: " + data);
-        })
-        .catch((error) => {
-          console.error("Error:", error);
-        });
-    });
+      .button {
+        padding: 10px 20px;
+        background-color: #4caf50;
+        color: white;
+        border: none;
+        cursor: pointer;
+        font-size: 16px;
+        margin: 10px;
+      }
 
-    document.getElementById("generate-pdf").addEventListener("click", () => {
-      generatePDF();
-    });
+      .button:hover {
+        background-color: #45a049;
+      }
 
-    async function generatePDF() {
-      const { jsPDF } = window.jspdf;
+      .input-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-wrap: wrap;
+        margin-bottom: 20px;
+      }
 
-      // Create a new instance of jsPDF
-      const doc = new jsPDF();
+      .box {
+        width: 200px;
+        height: 100px;
+        margin: 10px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: lightcoral;
+        border: 1px solid red;
+        text-align: center;
+        position: relative; /* Ensure positioning within the container */
+      }
 
-      const name = document.getElementById("name").value;
+      .box input {
+        position: absolute;
+        bottom: 5px;
+        left: 5px;
+        width: calc(100% - 10px);
+        padding: 5px;
+        box-sizing: border-box;
+      }
 
-      // Draw border
-      doc.setLineWidth(2);
-      doc.setDrawColor(0, 0, 255); // Blue color for the border
-      doc.rect(10, 10, 190, 277);
+      button {
+        padding: 10px 20px;
+        background-color: #4caf50;
+        color: white;
+        border: none;
+        cursor: pointer;
+        font-size: 16px;
+        margin-top: 20px;
+      }
 
-      // Add content to the PDF
-      doc.setFontSize(20);
-      doc.text("Certificate of Achievement", 105, 50, { align: "center" });
-      doc.setFontSize(16);
-      doc.text(`This is to certify that`, 105, 70, { align: "center" });
-      doc.setFontSize(18);
-      doc.text(name, 105, 90, { align: "center" });
-      doc.setFontSize(16);
-      doc.text(`has successfully completed the requirements.`, 105, 110, {
-        align: "center",
+      button:hover {
+        background-color: #45a049;
+      }
+
+      .error-message {
+        color: red;
+        margin-top: 5px;
+        font-size: 14px;
+      }
+
+      .pdf-container {
+        width: 100%;
+        height: 600px;
+        margin-top: 20px;
+      }
+
+      iframe {
+        width: 100%;
+        height: 100%;
+        border: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="input-container">
+      <div class="box" id="box1">
+        Name
+        <input type="text" id="name" placeholder="Enter your name" required />
+        <div id="name-error" class="error-message"></div>
+      </div>
+      <div class="box" id="box2">
+        Date
+        <input type="date" id="dob" />
+      </div>
+      <div class="box" id="box3">
+        License Plate Number
+        <input type="text" id="license" placeholder="Enter driver's license" />
+      </div>
+      <div class="box" id="box4">
+        Email
+        <input
+          type="email"
+          id="email"
+          placeholder="Enter your email"
+          required
+        />
+        <div id="email-error" class="error-message"></div>
+      </div>
+    </div>
+
+    <button id="save-btn">SAVE!</button>
+    <button id="generate-pdf">Generate PDF</button>
+    <button id="email-pdf">E-MAIL!</button>
+
+    <div class="pdf-container hidden" id="pdf-container">
+      <iframe id="pdf-viewer"></iframe>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+    <script>
+      document.getElementById("email-pdf").addEventListener("click", () => {
+        emailPDF();
       });
 
-      // Save the PDF locally using blob and URL.createObjectURL
-      const pdfName = `${name}_certificate.pdf`;
-      const pdfBlob = doc.output("blob");
-      const pdfUrl = URL.createObjectURL(pdfBlob);
+      document.getElementById("save-btn").addEventListener("click", () => {
+        const name = document.getElementById("name").value;
+        const dob = document.getElementById("dob").value;
+        const license = document.getElementById("license").value;
+        const email = document.getElementById("email").value;
 
-      // Show PDF in iframe
-      const pdfViewer = document.getElementById("pdf-viewer");
-      pdfViewer.src = pdfUrl;
-      document.getElementById("pdf-container").classList.remove("hidden");
+        // Simple validation for required fields
+        if (!name.trim()) {
+          document.getElementById("name-error").textContent =
+            "Name is required";
+          return;
+        } else {
+          document.getElementById("name-error").textContent = "";
+        }
 
-      // Clean up the URL object after some time to release resources
-      setTimeout(() => {
-        URL.revokeObjectURL(pdfUrl);
-      }, 60000); // Revoke URL after 1 minute (adjust as needed)
-    }
+        if (!email.trim()) {
+          document.getElementById("email-error").textContent =
+            "Email is required";
+          return;
+        } else {
+          document.getElementById("email-error").textContent = "";
+        }
 
-    document.getElementById("view-pdf").addEventListener("click", () => {
-      generatePDF(); // Generate and view PDF directly on the page
-    });
-  </script>
-</body>
+        const data = {
+          name: name,
+          dob: dob,
+          license: license,
+          email: email,
+        };
+
+        fetch("/save-data", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data),
+        })
+          .then((response) => response.text())
+          .then((data) => {
+            alert("Data saved successfully: " + data);
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+          });
+      });
+
+      document.getElementById("generate-pdf").addEventListener("click", () => {
+        generatePDF();
+      });
+      async function emailPDF(){
+        exec('node Nodemailer/sendEmail.js', (error, stdout, stderr) => {
+          if (error) {
+            console.error(`Error executing mycode.js: ${error.message}`);
+            return;
+          }
+          if (stderr) {
+            console.error(`stderr: ${stderr}`);
+            return;
+          }
+          console.log(`stdout: ${stdout}`);
+        });
+      }
+      
+
+      async function generatePDF() {
+        const { jsPDF } = window.jspdf;
+
+        // Create a new instance of jsPDF with landscape orientation
+        const doc = new jsPDF("landscape");
+
+        const name = document.getElementById("name").value;
+        const dob = document.getElementById("dob").value;
+        const license = document.getElementById("license").value;
+
+        // Draw border
+        doc.setLineWidth(2);
+        doc.setDrawColor(0, 0, 255); // Blue color for the border
+        doc.rect(10, 10, 277, 190); // Adjusted dimensions for landscape
+
+        // Add content to the PDF
+        doc.setFontSize(20);
+        doc.text("Certificate of Achievement", 148.5, 40, { align: "center" }); // Adjusted position for landscape
+        doc.setFontSize(16);
+        doc.text(`This is to certify that`, 148.5, 60, { align: "center" }); // Adjusted position for landscape
+        doc.setFontSize(18);
+        doc.text(name, 148.5, 80, { align: "center" }); // Adjusted position for landscape
+        doc.setFontSize(16);
+        doc.text(`has successfully completed the requirements.`, 148.5, 100, {
+          align: "center",
+        }); // Adjusted position for landscape
+        doc.text(`Date: ${dob}`, 148.5, 120, { align: "center" });
+        doc.text(`License: ${license}`, 148.5, 140, { align: "center" });
+
+        // Save the PDF locally using blob and URL.createObjectURL
+        const pdfName = `${name}_certificate.pdf`;
+        const pdfBlob = doc.output("blob");
+        const pdfUrl = URL.createObjectURL(pdfBlob);
+
+        // Show PDF in iframe
+        const pdfViewer = document.getElementById("pdf-viewer");
+        pdfViewer.src = pdfUrl;
+        document.getElementById("pdf-container").classList.remove("hidden");
+
+        // Clean up the URL object after some time to release resources
+        setTimeout(() => {
+          URL.revokeObjectURL(pdfUrl);
+        }, 60000); // Revoke URL after 1 minute (adjust as needed)
+      }
+
+      document.getElementById("view-pdf").addEventListener("click", () => {
+        generatePDF(); // Generate and view PDF directly on the page
+      });
+    </script>
+  </body>
 </html>

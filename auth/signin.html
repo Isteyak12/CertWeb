@@ -1,4 +1,3 @@
-<!-- signin.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -16,6 +15,36 @@
     <button type="submit">Sign In</button>
   </form>
 
-  <script src="signin.js"></script>
+  <script>
+    document.getElementById("signin-form").addEventListener("submit", function(event) {
+      event.preventDefault(); // Prevent default form submission
+
+      // Get input values
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+
+      // Fetch JSON data
+      fetch("users.json")
+        .then(response => {
+          if (!response.ok) {
+            throw new Error("Network response was not ok");
+          }
+          return response.json();
+        })
+        .then(data => {
+          // Check if user exists and credentials match
+          const user = data.users.find(user => user.email === email && user.password === password);
+          if (user) {
+            // Redirect to admin.html if credentials are correct
+            window.location.href = "../admin.html";
+          } else {
+            alert("Invalid credentials. Please try again.");
+          }
+        })
+        .catch(error => {
+          console.error("Error fetching JSON:", error);
+        });
+    });
+  </script>
 </body>
 </html>

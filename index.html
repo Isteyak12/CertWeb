@@ -14,7 +14,7 @@
         align-items: center;
         height: 100vh;
         flex-direction: column;
-        background-color: gray;
+        background-color: lightblue;
       }
 
       button {
@@ -42,9 +42,9 @@
       }
 
       header {
-        font-family: "Pacifico", cursive; /* Apply the Google Font to header */
-        font-size: 24px;
-        color: white;
+        font-family: "times-new", bold; /* Apply the Google Font to header */
+        font-size: 30px;
+        color: black;
         border-right: 0.15em solid orange;
         animation: blink-caret 0.75s step-end infinite;
       }
@@ -67,15 +67,15 @@
   </head>
   <body>
     <header>Welcome to the SITE</header>
-    <button class="button" onclick="redirectToadmin()">USER</button>
-    <button class="button" onclick="redirectToclient()">ADMIN</button>
+    <button class="button" onclick="redirectToadmin()">ADMIN</button>
+    <button class="button" onclick="redirectToclient()">USER</button>
 
     <script>
       function redirectToadmin() {
-        window.location.href = "client.html";
+        window.location.href = "auth/signin.html";
       }
       function redirectToclient() {
-        window.location.href = "admin.html";
+        window.location.href = "client.html";
       }
     </script>
   </body>
