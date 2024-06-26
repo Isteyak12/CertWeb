@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create PDF</title>
+    <script src="https://unpkg.com/pdf-lib@1.16.0"></script>
+</head>
+<body>
+    <button id="generatePdf">Generate PDF</button>
+    
+    <script>
+        document.getElementById('generatePdf').addEventListener('click', async () => {
+            const { PDFDocument, rgb, StandardFonts } = PDFLib;
+
+            // Create a new PDFDocument
+            const pdfDoc = await PDFDocument.create();
+
+            // Embed the Helvetica font
+            const timesRomanFont = await pdfDoc.embedFont(StandardFonts.TimesRoman);
+
+            // Add a blank page to the document
+            const page = pdfDoc.addPage([600, 400]);
+
+            // Set the font size
+            const fontSize = 12;
+            
+            // Define the headings and subheadings
+            const content = [
+                { text: "Certificate of Motor Insurance", size: 18, y: 370 },
+                { text: "1. Description of vehicle", size: 14, y: 340 },
+                { text: "2. Name of policyholder", size: 14, y: 320 },
+                { text: "3. Effective date of the commencement of insurance for the purpose of the relevant law", size: 14, y: 300 },
+                { text: "4. Limitations as to use", size: 14, y: 280 },
+                { text: "5. Persons or classes of persons entitled to drive", size: 14, y: 260 },
+                { text: "6. Limit of Cover", size: 14, y: 240 },
+                { text: "We hereby certify that the policy to which this certificate relates satisfies the requirements", size: 14, y: 220 }
+            ];
+
+            // Draw the headings and subheadings on the page
+            content.forEach(item => {
+                page.drawText(item.text, {
+                    x: 50,
+                    y: item.y,
+                    size: item.size,
+                    font: timesRomanFont,
+                    color: rgb(0, 0, 0)
+                });
+            });
+
+            // Serialize the PDFDocument to bytes (a Uint8Array)
+            const pdfBytes = await pdfDoc.save();
+
+            // Trigger the browser to download the PDF document
+            const blob = new Blob([pdfBytes], { type: 'application/pdf' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'Certificate_of_Motor_Insurance.pdf';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        });
+    </script>
+</body>
+</html>

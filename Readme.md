@@ -141,3 +141,7 @@ node server.js
 ```
 
 With this setup, when you click the "Execute mycode.js" button, it will call the `emailPDF` function, which sends a request to the server to execute the `mycode.js` script and display the result.
+
+
+//the workflow of the project
+where is the sign.html that i wanted to see when the admin button is clicked, i wanted it to work like this: server.js will be run of course, the index.html is locally hosted where if the admin button is clicked the app.json will be executed to execute the sign.html will be run and if info is entered correctly it will be redirected to ../admin.html

@@ -110,7 +110,7 @@
       <div id="name-error" class="error-message"></div>
     </div>
     <div class="box" id="box2">
-      Date 
+      Date
       <input type="date" id="dob">
     </div>
     <div class="box" id="box3">
@@ -126,6 +126,7 @@
 
   <button id="save-btn">SAVE!</button>
   <button id="generate-pdf">Generate PDF</button>
+  <button id="email-pdf">E-MAIL!</button>
 
   <div class="pdf-container hidden" id="pdf-container">
     <iframe id="pdf-viewer"></iframe>
@@ -133,6 +134,10 @@
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
   <script>
+    document.getElementById("email-pdf").addEventListener("click", () => {
+      emailPDF();
+    });
+
     document.getElementById("save-btn").addEventListener("click", () => {
       const name = document.getElementById("name").value;
       const dob = document.getElementById("dob").value;
@@ -141,16 +146,14 @@
 
       // Simple validation for required fields
       if (!name.trim()) {
-        document.getElementById("name-error").textContent =
-          "Name is required";
+        document.getElementById("name-error").textContent = "Name is required";
         return;
       } else {
         document.getElementById("name-error").textContent = "";
       }
 
       if (!email.trim()) {
-        document.getElementById("email-error").textContent =
-          "Email is required";
+        document.getElementById("email-error").textContent = "Email is required";
         return;
       } else {
         document.getElementById("email-error").textContent = "";
@@ -183,30 +186,44 @@
       generatePDF();
     });
 
+    async function emailPDF() {
+      try {
+        const response = await fetch("/execute-email");
+        const data = await response.text();
+        alert(data);
+      } catch (error) {
+        console.error("Error:", error);
+      }
+    }
+
     async function generatePDF() {
       const { jsPDF } = window.jspdf;
 
-      // Create a new instance of jsPDF
-      const doc = new jsPDF();
+      // Create a new instance of jsPDF with landscape orientation
+      const doc = new jsPDF("landscape");
 
       const name = document.getElementById("name").value;
+      const dob = document.getElementById("dob").value;
+      const license = document.getElementById("license").value;
 
       // Draw border
       doc.setLineWidth(2);
       doc.setDrawColor(0, 0, 255); // Blue color for the border
-      doc.rect(10, 10, 190, 277);
+      doc.rect(10, 10, 277, 190); // Adjusted dimensions for landscape
 
       // Add content to the PDF
       doc.setFontSize(20);
-      doc.text("Certificate of Achievement", 105, 50, { align: "center" });
+      doc.text("Certificate of Achievement", 148.5, 40, { align: "center" }); // Adjusted position for landscape
       doc.setFontSize(16);
-      doc.text(`This is to certify that`, 105, 70, { align: "center" });
+      doc.text(`This is to certify that`, 148.5, 60, { align: "center" }); // Adjusted position for landscape
       doc.setFontSize(18);
-      doc.text(name, 105, 90, { align: "center" });
+      doc.text(name, 148.5, 80, { align: "center" }); // Adjusted position for landscape
       doc.setFontSize(16);
-      doc.text(`has successfully completed the requirements.`, 105, 110, {
+      doc.text(`has successfully completed the requirements.`, 148.5, 100, {
         align: "center",
-      });
+      }); // Adjusted position for landscape
+      doc.text(`Date: ${dob}`, 148.5, 120, { align: "center" });
+      doc.text(`License: ${license}`, 148.5, 140, { align: "center" });
 
       // Save the PDF locally using blob and URL.createObjectURL
       const pdfName = `${name}_certificate.pdf`;
