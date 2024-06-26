@@ -1,7 +1,6 @@
 const express = require('express');
 const nodemailer = require('nodemailer');
 const path = require('path');
-const { exec } = require('child_process');
 const app = express();
 const port = 3000;
 

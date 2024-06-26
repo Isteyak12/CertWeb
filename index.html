@@ -62,11 +62,11 @@
 </head>
 <body>
     <header>Welcome to the SITE</header>
-    <button class="button" onclick="redirectToadmin()">ADMIN</button>
+    <button class="button" onclick="executeApp()">ADMIN</button>
     <button class="button" onclick="redirectToclient()">USER</button>
 
     <script>
-        function redirectToadmin() {
+        function executeApp() {
             fetch('/execute-app')
                 .then(response => {
                     if (response.ok) {
