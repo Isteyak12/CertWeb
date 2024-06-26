@@ -303,3 +303,236 @@ Certainly! Understanding the sequence of how the code in both `sign.html` and `a
 - **Step 5:** The client-side JavaScript handles the server's response and redirects the user to the admin page upon successful sign-in.
 
 This sequence ensures that the sign-in process is handled securely and smoothly, with the server responsible for authentication and email notification, and the client-side code managing the form submission and response handling.
+
+
+The error you are encountering, `EADDRINUSE: address already in use`, occurs because you are trying to start multiple servers on the same port (3000). The `auth/app.js` script itself starts an Express server on port 3000, which conflicts with the main server running on the same port.
+
+To resolve this, we need to ensure that only one server is running at a time, and we need to execute the code in `auth/app.js` without starting a new server.
+
+Here's how you can modify the setup:
+
+### `auth/app.js` (Modified)
+
+Instead of starting a new server, we will export the sign-in functionality as a function. This allows us to execute it from the main server without starting another server.
+
+```javascript
+const nodemailer = require("nodemailer");
+const path = require("path");
+const express = require("express");
+
+// Create a transporter
+const transporter = nodemailer.createTransport({
+  service: "Gmail",
+  host: "smtp.gmail.com",
+  port: 465,
+  secure: true,
+  auth: {
+    user: "testqqq808@gmail.com",
+    pass: "artz wqxy yqdt slcu",
+  },
+});
+
+// Function to handle sign-in
+const handleSignIn = (req, res) => {
+  const { email, password } = req.body;
+
+  // Check credentials
+  if (email === "testqqq808@gmail.com" && password === "artz wqxy yqdt slcu") {
+    // Create mail options
+    const mailOptions = {
+      from: "testqqq808@gmail.com",
+      to: "isteyakislam12@gmail.com",
+      subject: "Sign In Notification",
+      text: `User ${email} has successfully signed in.`,
+    };
+
+    // Send the email
+    transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+        console.error("Error sending email: ", error);
+        return res.status(500).json({ success: false, message: "Error sending email" });
+      } else {
+        console.log("Email sent: ", info.response);
+        return res.status(200).json({ success: true, message: "Sign in successful, email sent" });
+      }
+    });
+  } else {
+    return res.status(401).json({ success: false, message: "Invalid credentials" });
+  }
+};
+
+module.exports = handleSignIn;
+```
+
+### `server.js` (Modified)
+
+Now we will import the sign-in handler function from `auth/app.js` and use it in the main server.
+
+```javascript
+const express = require('express');
+const path = require('path');
+const { exec } = require('child_process');
+const handleSignIn = require('./auth/app');
+const app = express();
+const port = 3000;
+
+// Middleware to parse JSON bodies
+app.use(express.json());
+
+// Serve static files from the current directory
+app.use(express.static(__dirname));
+
+// Route to serve index.html
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'index.html'));
+});
+
+// Route to serve client.html
+app.get('/client.html', (req, res) => {
+    res.sendFile(path.join(__dirname, 'client.html'));
+});
+
+// Endpoint to execute the sendEmail.js script
+app.get('/execute-email', (req, res) => {
+    exec('node Nodemailer/sendEmail.js', (error, stdout, stderr) => {
+        if (error) {
+            console.error(`Error executing sendEmail.js: ${error.message}`);
+            res.status(500).send(`Error: ${error.message}`);
+            return;
+        }
+        if (stderr) {
+            console.error(`stderr: ${stderr}`);
+            res.status(500).send(`stderr: ${stderr}`);
+            return;
+        }
+        console.log(`stdout: ${stdout}`);
+        res.send(`stdout: ${stdout}`);
+    });
+});
+
+// Endpoint to execute the sign-in logic
+app.post('/execute-app', (req, res) => {
+    handleSignIn(req, res);
+});
+
+// Start server
+app.listen(port, () => {
+    console.log(`Server running at http://localhost:${port}`);
+});
+```
+
+### `index.html` (Unchanged)
+
+This file remains the same, as it correctly handles the button click to call the `/execute-app` endpoint.
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>📧Certifying!</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            flex-direction: column;
+            background-color: lightblue;
+        }
+
+        button {
+            width: 150px;
+            height: 150px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 0;
+            background-color: crimson;
+            color: black;
+            font: Arial;
+            font-weight: bold;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 20px;
+            box-sizing: border-box;
+            border: 10px solid;
+            border-color: black;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        header {
+            font-family: "times-new", bold;
+            font-size: 30px;
+            color: black;
+            border-right: 0.15em solid orange;
+            animation: blink-caret 0.75s step-end infinite;
+        }
+
+        @keyframes blink-caret {
+            from,
+            to {
+                border-color: transparent;
+            }
+            50% {
+                border-color: orange;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>Welcome to the SITE</header>
+    <button class="button" onclick="executeApp()">ADMIN</button>
+    <button class="button" onclick="redirectToclient()">USER</button>
+
+    <script>
+        function executeApp() {
+            fetch('/execute-app', { method: 'POST' })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        window.location.href = '/auth/sign.html';
+                    } else {
+                        alert('Execution failed: ' + data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        }
+
+        function redirectToclient() {
+            window.location.href = 'client.html';
+        }
+    </script>
+</body>
+</html>
+```
+
+### Running the Application
+
+1. **Install Dependencies**:
+   Ensure you have Node.js installed. Initialize a new Node.js project and install the required packages by running:
+   ```sh
+   npm init -y
+   npm install express nodemailer
+   ```
+
+2. **Run the Main Server**:
+   Start your main Express server by running:
+   ```sh
+   node server.js
+   ```
+
+3. **Access the Index Page**:
+   Open your web browser and navigate to `http://localhost:3000` to see the index page. Click the "ADMIN" button to trigger the execution of `auth/app.js` and then redirect to `auth/sign.html`. Upon entering valid credentials, it will redirect to `admin.html`.
+
+By making these changes, clicking the "ADMIN" button will trigger the execution of the sign-in logic defined in `auth/app.js` without starting another server, thus avoiding port conflicts.
