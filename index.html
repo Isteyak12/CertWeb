@@ -1,82 +1,88 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>📧Certifying!</title>
     <style>
-      body {
-        font-family: Arial, sans-serif;
-        margin: 0;
-        padding: 0;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100vh;
-        flex-direction: column;
-        background-color: lightblue;
-      }
-
-      button {
-        width: 150px;
-        height: 150px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        padding: 0;
-        background-color: crimson;
-        color: black;
-        font: Arial;
-        font-weight: bold;
-        border: none;
-        cursor: pointer;
-        font-size: 16px;
-        margin-top: 20px;
-        box-sizing: border-box;
-        border: 10px solid;
-        border-color: black;
-      }
-
-      button:hover {
-        background-color: #45a049;
-      }
-
-      header {
-        font-family: "times-new", bold; /* Apply the Google Font to header */
-        font-size: 30px;
-        color: black;
-        border-right: 0.15em solid orange;
-        animation: blink-caret 0.75s step-end infinite;
-      }
-
-      @keyframes blink-caret {
-        from,
-        to {
-          border-color: transparent;
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            flex-direction: column;
+            background-color: lightblue;
         }
-        50% {
-          border-color: orange;
-        }
-      }
 
-      /*@keyframes typing {
-        from { width: 0 }
-        to { width: 100% }
-      }*/
+        button {
+            width: 150px;
+            height: 150px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 0;
+            background-color: crimson;
+            color: black;
+            font: Arial;
+            font-weight: bold;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 20px;
+            box-sizing: border-box;
+            border: 10px solid;
+            border-color: black;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        header {
+            font-family: "times-new", bold; /* Apply the Google Font to header */
+            font-size: 30px;
+            color: black;
+            border-right: 0.15em solid orange;
+            animation: blink-caret 0.75s step-end infinite;
+        }
+
+        @keyframes blink-caret {
+            from,
+            to {
+                border-color: transparent;
+            }
+            50% {
+                border-color: orange;
+            }
+        }
     </style>
-  </head>
-  <body>
+</head>
+<body>
     <header>Welcome to the SITE</header>
     <button class="button" onclick="redirectToadmin()">ADMIN</button>
     <button class="button" onclick="redirectToclient()">USER</button>
 
     <script>
-      function redirectToadmin() {
-        window.location.href = "auth/sign.html";
-      }
-      function redirectToclient() {
-        window.location.href = "client.html";
-      }
+        function redirectToadmin() {
+            fetch('/execute-app')
+                .then(response => {
+                    if (response.ok) {
+                        window.location.href = '/auth/sign.html';
+                    } else {
+                        alert('Execution failed: ' + response.statusText);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        }
+
+        function redirectToclient() {
+            window.location.href = 'client.html';
+        }
     </script>
-  </body>
+</body>
 </html>
