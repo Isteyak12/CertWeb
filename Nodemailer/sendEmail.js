@@ -9,8 +9,8 @@ const transporter = nodemailer.createTransport({
   port: 465,
   secure: true,
   auth: {
-    user: "testqqq808@gmail.com",
-    pass: "artz wqxy yqdt slcu",
+    user: "isteyakislam12@gmail.com",
+    pass: "hsnx wlvv yirw qhay",
   },
 });
 
@@ -21,7 +21,7 @@ const pdfFile = fs.readdirSync(currentDir).find(file => path.extname(file).toLow
 if (pdfFile) {
   // Create mail options with the PDF attachment
   const mailOptions = {
-    from: "testqqq808@gmail.com",
+    from: "isteyakislam12@gmail.com",
     to: "isteyakislam12@gmail.com",
     subject: "Hello from Nodemailer",
     text: "This is a test email sent using Nodemailer.",
