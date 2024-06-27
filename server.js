@@ -4,6 +4,8 @@ const path = require('path');
 const { exec } = require('child_process');
 const app = express();
 const port = 3000;
+require('dotenv').config();
+
 
 // Middleware to parse JSON bodies
 app.use(express.json());
@@ -56,9 +58,9 @@ const transporter = nodemailer.createTransport({
     port: 465,
     secure: true,
     auth: {
-        user: "isteyakislam12@gmail.com",
-        pass: "hsnx wlvv yirw qhay",
-    },
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS,
+      },
 });
 
 // Sign in route
@@ -66,7 +68,7 @@ app.post('/signin', (req, res) => {
     const { email, password } = req.body;
 
     // Check credentials
-    if (email === "isteyakislam12@gmail.com" && password === "hsnx wlvv yirw qhay") {
+    if (email === process.env.EMAIL_USER && password === process.env.EMAIL_PASS) {
         // Create mail options
         const mailOptions = {
             from: "isteyakislam12@gmail.com",

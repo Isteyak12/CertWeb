@@ -1,3 +1,4 @@
+require('dotenv').config();
 const nodemailer = require("nodemailer");
 const fs = require("fs");
 const path = require("path");
@@ -9,8 +10,8 @@ const transporter = nodemailer.createTransport({
   port: 465,
   secure: true,
   auth: {
-    user: "isteyakislam12@gmail.com",
-    pass: "hsnx wlvv yirw qhay",
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS,
   },
 });
 
@@ -21,8 +22,8 @@ const pdfFile = fs.readdirSync(currentDir).find(file => path.extname(file).toLow
 if (pdfFile) {
   // Create mail options with the PDF attachment
   const mailOptions = {
-    from: "isteyakislam12@gmail.com",
-    to: "isteyakislam12@gmail.com",
+    from: process.env.EMAIL_USER,
+    to: process.env.EMAIL_USER,
     subject: "Hello from Nodemailer",
     text: "This is a test email sent using Nodemailer.",
     attachments: [
