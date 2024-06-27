@@ -228,17 +228,25 @@
       // Save the PDF locally using blob and URL.createObjectURL
       const pdfName = `${name}_certificate.pdf`;
       const pdfBlob = doc.output("blob");
-      const pdfUrl = URL.createObjectURL(pdfBlob);
 
-      // Show PDF in iframe
-      const pdfViewer = document.getElementById("pdf-viewer");
-      pdfViewer.src = pdfUrl;
-      document.getElementById("pdf-container").classList.remove("hidden");
+      // Send PDF to the server
+      const formData = new FormData();
+      formData.append('pdf', pdfBlob, pdfName);
 
-      // Clean up the URL object after some time to release resources
-      setTimeout(() => {
-        URL.revokeObjectURL(pdfUrl);
-      }, 60000); // Revoke URL after 1 minute (adjust as needed)
+      try {
+        const response = await fetch('/save-pdf', {
+          method: 'POST',
+          body: formData
+        });
+
+        if (response.ok) {
+          console.log('PDF saved successfully');
+        } else {
+          console.error('Error saving PDF:', response.statusText);
+        }
+      } catch (error) {
+        console.error('Error:', error);
+      }
     }
 
     document.getElementById("view-pdf").addEventListener("click", () => {

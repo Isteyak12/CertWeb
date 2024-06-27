@@ -2,10 +2,13 @@ const express = require('express');
 const nodemailer = require('nodemailer');
 const path = require('path');
 const { exec } = require('child_process');
+const multer = require('multer');
+const fs = require('fs');
 const app = express();
 const port = 3000;
 require('dotenv').config();
 
+const upload = multer({ dest: 'uploads/' });
 
 // Middleware to parse JSON bodies
 app.use(express.json());
@@ -60,7 +63,7 @@ const transporter = nodemailer.createTransport({
     auth: {
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASS,
-      },
+    },
 });
 
 // Sign in route
@@ -95,6 +98,20 @@ app.post('/signin', (req, res) => {
 // Endpoint to handle the admin button click
 app.get('/execute-app', (req, res) => {
     res.redirect('/auth/sign.html');
+});
+
+// Endpoint to save the PDF
+app.post('/save-pdf', upload.single('pdf'), (req, res) => {
+    const tempPath = req.file.path;
+    const targetPath = path.join(__dirname, `${req.file.originalname}`);
+
+    fs.rename(tempPath, targetPath, err => {
+        if (err) {
+            console.error("Error saving PDF:", err);
+            return res.status(500).send("Error saving PDF");
+        }
+        res.send("PDF saved successfully");
+    });
 });
 
 // Start the server
