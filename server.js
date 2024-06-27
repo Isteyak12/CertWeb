@@ -4,6 +4,7 @@ const path = require('path');
 const { exec } = require('child_process');
 const multer = require('multer');
 const fs = require('fs');
+const session = require('express-session');
 const app = express();
 const port = 3000;
 require('dotenv').config();
@@ -12,6 +13,23 @@ const upload = multer({ dest: 'uploads/' });
 
 // Middleware to parse JSON bodies
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+// Use sessions to keep track of logged-in users
+app.use(session({
+    secret: 'your-secret-key', // Change this to a secure secret key
+    resave: false,
+    saveUninitialized: true,
+    cookie: { secure: false } // Set to true if using HTTPS
+}));
+
+// Middleware to store the referrer in the session
+app.use((req, res, next) => {
+    if (req.headers.referer) {
+        req.session.referrer = req.headers.referer;
+    }
+    next();
+});
 
 // Serve static files from the current directory
 app.use(express.static(__dirname));
@@ -49,8 +67,31 @@ app.get('/auth/sign.html', (req, res) => {
     res.sendFile(path.join(__dirname, 'auth/sign.html'));
 });
 
-// Serve admin.html
-app.get('/admin.html', (req, res) => {
+// Middleware to check if the user is authenticated and referred from sign.html
+function checkAuthentication(req, res, next) {
+    console.log('checkAuthentication - isAuthenticated:', req.session.isAuthenticated);
+    if (req.session && req.session.isAuthenticated && req.session.referrer && req.session.referrer.includes('/auth/sign.html')) {
+        next();
+    } else {
+        console.log('User is not authenticated or did not come from sign.html, redirecting to /auth/sign.html');
+        res.redirect('/auth/sign.html');
+    }
+}
+
+// Middleware to check if the user was redirected from the sign-in page
+function checkRedirectFromSignin(req, res, next) {
+    console.log('checkRedirectFromSignin - fromSignin:', req.session.fromSignin);
+    if (req.session && req.session.fromSignin) {
+        req.session.fromSignin = false; // Reset the flag
+        next();
+    } else {
+        console.log('User did not come from signin, redirecting to /auth/sign.html');
+        res.redirect('/auth/sign.html');
+    }
+}
+
+// Serve admin.html with authentication and redirect check
+app.get('/admin.html', checkAuthentication, checkRedirectFromSignin, (req, res) => {
     res.sendFile(path.join(__dirname, 'admin.html'));
 });
 
@@ -72,10 +113,14 @@ app.post('/signin', (req, res) => {
 
     // Check credentials
     if (email === process.env.EMAIL_USER && password === process.env.EMAIL_PASS) {
+        // Authenticate the user and start a session
+        req.session.isAuthenticated = true;
+        req.session.fromSignin = true; // Set the flag indicating the user came from sign-in
+
         // Create mail options
         const mailOptions = {
-            from: "isteyakislam12@gmail.com",
-            to: "isteyakislam12@gmail.com",
+            from: process.env.EMAIL_USER,
+            to: process.env.EMAIL_USER,
             subject: "Sign In Notification",
             text: `User ${email} has successfully signed in.`,
         };
@@ -97,6 +142,8 @@ app.post('/signin', (req, res) => {
 
 // Endpoint to handle the admin button click
 app.get('/execute-app', (req, res) => {
+    console.log('Setting fromSignin to true and redirecting to /auth/sign.html');
+    req.session.fromSignin = true; // Set the flag for redirect
     res.redirect('/auth/sign.html');
 });
 
@@ -112,6 +159,15 @@ app.post('/save-pdf', upload.single('pdf'), (req, res) => {
         }
         res.send("PDF saved successfully");
     });
+});
+
+// Endpoint to check authentication status
+app.get('/check-authentication', (req, res) => {
+    if (req.session && req.session.isAuthenticated) {
+        res.status(200).send("Authenticated");
+    } else {
+        res.status(401).send("Not authenticated");
+    }
 });
 
 // Start the server

@@ -536,3 +536,6 @@ This file remains the same, as it correctly handles the button click to call the
    Open your web browser and navigate to `http://localhost:3000` to see the index page. Click the "ADMIN" button to trigger the execution of `auth/app.js` and then redirect to `auth/sign.html`. Upon entering valid credentials, it will redirect to `admin.html`.
 
 By making these changes, clicking the "ADMIN" button will trigger the execution of the sign-in logic defined in `auth/app.js` without starting another server, thus avoiding port conflicts.
+
+
+temp email, random key generator 

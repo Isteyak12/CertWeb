@@ -252,6 +252,20 @@
     document.getElementById("view-pdf").addEventListener("click", () => {
       generatePDF(); // Generate and view PDF directly on the page
     });
+
+    // Check authentication status on page load
+    document.addEventListener('DOMContentLoaded', function() {
+        fetch('/check-authentication')
+            .then(response => {
+                if (!response.ok) {
+                    window.location.href = '/auth/sign.html';
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                window.location.href = '/auth/sign.html';
+            });
+    });
   </script>
 </body>
 </html>
