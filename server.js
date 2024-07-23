@@ -5,13 +5,14 @@ const { exec } = require('child_process');
 const multer = require('multer');
 const fs = require('fs');
 const session = require('express-session');
-const app = express();
-const port = 3000;
 require('dotenv').config();
+
+const app = express();
+const port = process.env.PORT || 3001;
 
 const upload = multer({ dest: 'uploads/' });
 
-// Middleware to parse JSON bodies
+// Middleware to parse JSON bodies and form data
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -31,8 +32,14 @@ app.use((req, res, next) => {
     next();
 });
 
-// Serve static files from the current directory
-app.use(express.static(__dirname));
+// Serve static files from the current directory except for protected routes
+app.use((req, res, next) => {
+    if (req.path === '/admin.html') {
+        next();
+    } else {
+        express.static(__dirname)(req, res, next);
+    }
+});
 
 // Route to serve index.html
 app.get('/', (req, res) => {
@@ -67,13 +74,13 @@ app.get('/auth/sign.html', (req, res) => {
     res.sendFile(path.join(__dirname, 'auth/sign.html'));
 });
 
-// Middleware to check if the user is authenticated and referred from sign.html
+// Middleware to check if the user is authenticated
 function checkAuthentication(req, res, next) {
     console.log('checkAuthentication - isAuthenticated:', req.session.isAuthenticated);
-    if (req.session && req.session.isAuthenticated && req.session.referrer && req.session.referrer.includes('/auth/sign.html')) {
+    if (req.session && req.session.isAuthenticated) {
         next();
     } else {
-        console.log('User is not authenticated or did not come from sign.html, redirecting to /auth/sign.html');
+        console.log('User is not authenticated, redirecting to /auth/sign.html');
         res.redirect('/auth/sign.html');
     }
 }
@@ -83,6 +90,7 @@ function checkRedirectFromSignin(req, res, next) {
     console.log('checkRedirectFromSignin - fromSignin:', req.session.fromSignin);
     if (req.session && req.session.fromSignin) {
         req.session.fromSignin = false; // Reset the flag
+        req.session.refreshCheck = true; // Set the refresh check flag
         next();
     } else {
         console.log('User did not come from signin, redirecting to /auth/sign.html');
@@ -90,8 +98,19 @@ function checkRedirectFromSignin(req, res, next) {
     }
 }
 
+// Middleware to handle page refresh and redirect to sign-in page
+function handlePageRefresh(req, res, next) {
+    if (req.session && req.session.refreshCheck) {
+        req.session.refreshCheck = false; // Reset the refresh check flag
+        next();
+    } else {
+        console.log('Page refreshed, redirecting to /auth/sign.html');
+        res.redirect('/auth/sign.html');
+    }
+}
+
 // Serve admin.html with authentication and redirect check
-app.get('/admin.html', checkAuthentication, checkRedirectFromSignin, (req, res) => {
+app.get('/admin.html', checkAuthentication, checkRedirectFromSignin, handlePageRefresh, (req, res) => {
     res.sendFile(path.join(__dirname, 'admin.html'));
 });
 
@@ -138,6 +157,12 @@ app.post('/signin', (req, res) => {
     } else {
         return res.status(401).json({ success: false, message: "Invalid credentials" });
     }
+});
+
+// Logout route
+app.get('/logout', (req, res) => {
+    req.session.destroy();
+    res.send('<script>sessionStorage.removeItem("isAuthenticated"); window.location.href = "/auth/sign.html";</script>');
 });
 
 // Endpoint to handle the admin button click

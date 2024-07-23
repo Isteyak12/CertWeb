@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Certificate Generator</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.min.js"></script>
+</head>
+<body>
+    <h1>Certificate of Motor Insurance</h1>
+    <form id="certificate-form">
+        <label for="registration">Registration number:</label>
+        <input type="text" id="registration" name="registration"><br><br>
+        <label for="name">Name of Policyholder:</label>
+        <input type="text" id="name" name="name"><br><br>
+        <label for="persons">Persons entitled to drive:</label>
+        <input type="text" id="persons" name="persons"><br><br>
+        <label for="cover">Level of Cover:</label>
+        <input type="text" id="cover" name="cover"><br><br>
+        <label for="effectiveDate">Effective Date:</label>
+        <input type="text" id="effectiveDate" name="effectiveDate"><br><br>
+        <label for="expiryDate">Expiry Date:</label>
+        <input type="text" id="expiryDate" name="expiryDate"><br><br>
+        <button type="button" onclick="generatePDF()">Generate PDF</button>
+    </form>
+    <div id="pdf-container" class="hidden">
+        <iframe id="pdf-viewer" style="width:100%;height:500px;"></iframe>
+    </div>
+    <script>
+        async function generatePDF() {
+            const { jsPDF } = window.jspdf;
+
+            const registration = document.getElementById("registration").value;
+            const name = document.getElementById("name").value;
+            const persons = document.getElementById("persons").value;
+            const cover = document.getElementById("cover").value;
+            const effectiveDate = document.getElementById("effectiveDate").value;
+            const expiryDate = document.getElementById("expiryDate").value;
+
+            // Create a new instance of jsPDF
+            const doc = new jsPDF('p', 'mm', 'a4');
+
+            // Add the company logo
+            const logo = new Image();
+            logo.src = 'data:image/png;base64,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'; // Replace with the path to your logo image
+            logo.onload = function() {
+                doc.addImage(logo, 'PNG', 150, 10, 50, 20);
+
+                // Add content to the PDF
+                doc.setFontSize(20);
+                doc.text("Certificate of Motor Insurance", 105, 40, { align: "center" });
+
+                doc.setFontSize(12);
+                doc.text("Issued by: Veygo", 20, 50);
+                doc.text("Policy number: AD STM CSI 62008149062", 20, 60);
+
+                doc.setFontSize(10);
+                doc.text("This Certificate is evidence that you have insurance to comply with the law. You must read this document along with your Temporary Car Insurance Guide and your Policy Schedule.", 20, 70, { maxWidth: 170 });
+                doc.text("If any of the details shown below are wrong, please e-mail Veygo at support@veygo.com. If you do not inform Veygo of any incorrect details, you may not have the protection of the policy.", 20, 80, { maxWidth: 170 });
+
+                doc.setFontSize(12);
+                doc.text(`1. Registration number: ${registration}`, 20, 100);
+                doc.text(`2. Name of Policyholder: ${name}`, 20, 110);
+                doc.text(`3. Persons entitled to drive: ${persons}`, 20, 120);
+                doc.text(`4. Level of Cover: ${cover}`, 20, 130);
+                doc.text(`5. Effective Date: ${effectiveDate}`, 20, 140);
+                doc.text(`6. Expiry Date: ${expiryDate}`, 20, 150);
+
+                doc.setFontSize(10);
+                doc.text("7. Permitted use:", 20, 160);
+                doc.text("Use for social, domestic and pleasure purposes and travel between home and permanent place of business.", 30, 170, { maxWidth: 150 });
+                doc.text("The Policy does not cover:", 20, 180);
+                doc.text("Use for merchandise delivery or use for any purpose in connection with the Motor Trade.", 30, 190, { maxWidth: 150 });
+                doc.text("Use to secure the release of a motor vehicle, which has been seized by, or on behalf of, any government or public authority.", 30, 200, { maxWidth: 150 });
+                doc.text("Use on the Nurburgring Nordschleife, or any racetrack or prepared course.", 30, 210, { maxWidth: 150 });
+                doc.text("Use for any formal or informal race, whether prearranged or not.", 30, 220, { maxWidth: 150 });
+                doc.text("Use to participate in any test, competition or organized motoring event or where the type of use is not shown under the above heading 'Permitted Use'.", 30, 230, { maxWidth: 150 });
+                doc.text("Travel outside the territorial limits.", 30, 240, { maxWidth: 150 });
+                doc.text("Driving any other vehicles other than those listed in Section 1.", 30, 250, { maxWidth: 150 });
+
+                doc.text("We hereby certify that the policy to which this Certificate relates satisfies the requirements of the relevant law applicable in Great Britain, Northern Ireland, the Isle of Man, the Islands of Alderney, Guernsey and Jersey.", 20, 270, { maxWidth: 170 });
+                doc.text("For and on behalf of Authorised Insurer: Admiral Insurance (Gibraltar) Ltd is authorised and regulated by the Financial Services Commission (Registration No: 220858) 1st Floor, 24 College Road, PO Box 575, Gibraltar GX11 1AA (Home State: Gibraltar).", 20, 280, { maxWidth: 170 });
+                doc.text("Details about the extent of our regulation by the Financial Conduct Authority and Prudential Regulation Authority are available from us on request.", 20, 290, { maxWidth: 170 });
+                doc.text("Emma Huntington, for the Authorised Insurers", 20, 300);
+
+                // Add signature box at the bottom right
+                doc.setLineWidth(0.5);
+                doc.rect(140, 320, 50, 20); // Signature box dimensions
+                doc.text("Signature", 145, 335);
+                doc.text("for the Authorised Insurers", 140, 355);
+
+                // Save the PDF locally
+                const pdfName = `${name}_certificate.pdf`;
+                doc.save(pdfName);
+
+                // Show PDF in iframe
+                const pdfBlob = doc.output("blob");
+                const pdfUrl = URL.createObjectURL(pdfBlob);
+                const pdfViewer = document.getElementById("pdf-viewer");
+                pdfViewer.src = pdfUrl;
+                document.getElementById("pdf-container").classList.remove("hidden");
+
+                // Clean up the URL object after some time to release resources
+                setTimeout(() => {
+                    URL.revokeObjectURL(pdfUrl);
+                }, 60000); // Revoke URL after 1 minute (adjust as needed)
+            };
+        }
+    </script>
+</body>
+</html>
