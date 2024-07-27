@@ -1,5 +1,3 @@
-
-```markdown
 # Web-Based PDF and Email Automation System for Veygo Insurance
 
 ![Node.js](https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white)
@@ -47,11 +45,9 @@ To run the project locally, follow these steps:
     Open your browser and navigate to `http://localhost:3001`
 
 ## Project Structure
-
-```
 veygo-insurance-automation/
 ├── auth/
-│   └── sign.html
+│ └── sign.html
 ├── uploads/
 ├── veygo.webp
 ├── index.html
@@ -61,7 +57,6 @@ veygo-insurance-automation/
 ├── package.json
 ├── .env
 └── README.md
-```
 
 ## Technologies Used
 
@@ -82,26 +77,3 @@ veygo-insurance-automation/
 ## Contact
 
 For any inquiries or support, please contact [your-email@gmail.com](mailto:your-email@gmail.com).
-```
-
-### Explanation
-
-1. **Project Overview**:
-    - Describes the project's purpose and key features.
-
-2. **Running the Project**:
-    - Provides step-by-step instructions to set up and run the project locally.
-
-3. **Project Structure**:
-    - Lists the main files and directories in the project.
-
-4. **Technologies Used**:
-    - Lists the key technologies used in the project.
-
-5. **Features**:
-    - Highlights the main features of the project.
-
-6. **Contact**:
-    - Provides contact information for further inquiries or support.
-
-Make sure to replace the placeholder values such as repository URL and contact email with your actual details. Additionally, ensure that `veygo.webp` is in the root directory of your project for the image to be displayed correctly in the `README.md` file.
