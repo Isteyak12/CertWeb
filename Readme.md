@@ -44,20 +44,6 @@ To run the project locally, follow these steps:
 5. **Open the application**:
     Open your browser and navigate to `http://localhost:3001`
 
-## Project Structure
-veygo-insurance-automation/
-├── auth/
-│ └── sign.html
-├── uploads/
-├── veygo.webp
-├── index.html
-├── client.html
-├── admin.html
-├── server.js
-├── package.json
-└── README.md
-└── Nodemailer/sendEmail.js
-
 
 ## Technologies Used
 
