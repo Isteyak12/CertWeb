@@ -55,8 +55,9 @@ veygo-insurance-automation/
 ├── admin.html
 ├── server.js
 ├── package.json
-├── .env
 └── README.md
+└── Nodemailer/sendEmail.js
+
 
 ## Technologies Used
 
@@ -74,6 +75,4 @@ veygo-insurance-automation/
 - Automated email sending with PDF attachments.
 - Restricted admin access for enhanced security.
 
-## Contact
 
-For any inquiries or support, please contact [your-email@gmail.com](mailto:your-email@gmail.com).
