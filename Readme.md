@@ -62,3 +62,5 @@ To run the project locally, follow these steps:
 - Restricted admin access for enhanced security.
 
 
+Alternate web link: https://certifierapp.netlify.app/
+
