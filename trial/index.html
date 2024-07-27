@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Update Email</title>
+</head>
+<body>
+  <h1>Update Email</h1>
+  <input type="email" id="email" placeholder="Enter new email">
+  <button onclick="updateEmail()">Update Email</button>
+
+  <pre id="output"></pre>
+
+  <script>
+    async function updateEmail() {
+      const email = document.getElementById('email').value;
+
+      try {
+        const response = await fetch('http://localhost:3000/update-email', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ email: email }),
+        });
+
+        if (response.ok) {
+          const result = await response.text();
+          document.getElementById('output').textContent = result;
+        } else {
+          document.getElementById('output').textContent = 'Error updating email';
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        document.getElementById('output').textContent = 'Error updating email';
+      }
+    }
+  </script>
+</body>
+</html>

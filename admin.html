@@ -161,10 +161,16 @@
 
     async function emailPDF() {
       const email = document.getElementById("email").value;
-      //overrwrite the email val to data.json file's email attr in the same dir
 
       try {
-        const response = await fetch("/execute-email");
+        const response = await fetch("/execute-email", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({ email })
+        });
+
         const data = await response.text();
         alert(data);
       } catch (error) {
