@@ -57,7 +57,7 @@
       background-color: lightcoral;
       border: 1px solid red;
       text-align: center;
-      position: relative; /* Ensure positioning within the container */
+      position: relative;
     }
 
     .box input {
@@ -122,11 +122,25 @@
       <input type="email" id="email" placeholder="Enter your email" required>
       <div id="email-error" class="error-message"></div>
     </div>
+    <div class="box" id="box5">
+      Car Model
+      <input type="text" id="car-model" placeholder="Enter car model" required>
+      <div id="car-model-error" class="error-message"></div>
+    </div>
+
+    <div class="box" id="box6">
+      Price
+      <input type="text" id="price" placeholder="Enter price" required>
+      <div id="price-error" class="error-message"></div>
+    </div>
+
+    <div class="box" id="box7">
+      Insurance Date
+      <input type="date" id="insurance-date">
+    </div>
   </div>
 
-  <button id="save-btn">SAVE!</button>
   <button id="generate-pdf">Generate PDF</button>
-  <!-- <button id="email-pdf">E-MAIL!</button> -->
 
   <div class="pdf-container hidden" id="pdf-container">
     <iframe id="pdf-viewer"></iframe>
@@ -134,77 +148,20 @@
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
   <script>
-    document.getElementById("email-pdf").addEventListener("click", () => {
-      emailPDF();
-    });
-
-    document.getElementById("save-btn").addEventListener("click", () => {
-      const name = document.getElementById("name").value;
-      const dob = document.getElementById("dob").value;
-      const license = document.getElementById("license").value;
-      const email = document.getElementById("email").value;
-
-      // Simple validation for required fields
-      if (!name.trim()) {
-        document.getElementById("name-error").textContent = "Name is required";
-        return;
-      } else {
-        document.getElementById("name-error").textContent = "";
-      }
-
-      if (!email.trim()) {
-        document.getElementById("email-error").textContent = "Email is required";
-        return;
-      } else {
-        document.getElementById("email-error").textContent = "";
-      }
-
-      const data = {
-        name: name,
-        dob: dob,
-        license: license,
-        email: email,
-      };
-
-      fetch("/save-data", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      })
-        .then((response) => response.text())
-        .then((data) => {
-          alert("Data saved successfully: " + data);
-        })
-        .catch((error) => {
-          console.error("Error:", error);
-        });
-    });
-
     document.getElementById("generate-pdf").addEventListener("click", () => {
       generatePDF();
     });
 
-    async function emailPDF() {
-      try {
-        const response = await fetch("/execute-email");
-        const data = await response.text();
-        alert(data);
-      } catch (error) {
-        console.error("Error:", error);
-      }
-    }
-
     async function generatePDF() {
       const { jsPDF } = window.jspdf;
-
-      // Create a new instance of jsPDF with landscape orientation
       const doc = new jsPDF("landscape");
-
       const name = document.getElementById("name").value;
       const dob = document.getElementById("dob").value;
       const license = document.getElementById("license").value;
+      const email = document.getElementById("email").value;
+      const insuranceDate = document.getElementById("insurance-date").value;
+      const carModel = document.getElementById("car-model").value;
+      const price = document.getElementById("price").value;
 
       // Draw border
       doc.setLineWidth(2);
@@ -225,25 +182,12 @@
       doc.text(`Date: ${dob}`, 148.5, 120, { align: "center" });
       doc.text(`License: ${license}`, 148.5, 140, { align: "center" });
 
-      // Save the PDF locally using blob and URL.createObjectURL
-      const pdfName = `${name}_certificate.pdf`;
+      // Convert the PDF to a Blob URL and display it in the iframe
       const pdfBlob = doc.output("blob");
       const pdfUrl = URL.createObjectURL(pdfBlob);
-
-      // Show PDF in iframe
-      const pdfViewer = document.getElementById("pdf-viewer");
-      pdfViewer.src = pdfUrl;
+      document.getElementById("pdf-viewer").src = pdfUrl;
       document.getElementById("pdf-container").classList.remove("hidden");
-
-      // Clean up the URL object after some time to release resources
-      setTimeout(() => {
-        URL.revokeObjectURL(pdfUrl);
-      }, 60000); // Revoke URL after 1 minute (adjust as needed)
     }
-
-    document.getElementById("view-pdf").addEventListener("click", () => {
-      generatePDF(); // Generate and view PDF directly on the page
-    });
   </script>
 </body>
 </html>

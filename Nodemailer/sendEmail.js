@@ -39,8 +39,8 @@ if (pdfFile) {
   const mailOptions = {
     from: process.env.EMAIL_USER,
     to: email, // Use the email read from data.json
-    subject: "Hello from Nodemailer",
-    text: "This is a test email sent using Nodemailer.",
+    subject: "Document",
+    text: "Here is the attached document.",
     attachments: [
       {
         filename: pdfFile,
