@@ -89,14 +89,16 @@ const emailBody = `
         .incident-info {
             margin-top: 20px;
         }
-            .payment-disputes {
+
+        .payment-disputes {
             margin-top: 20px;
         }
 
         .contact-info {
             margin-top: 20px;
         }
-            h1, h2 {
+
+        h1, h2 {
             text-align: center;
         }
 
@@ -109,7 +111,7 @@ const emailBody = `
     <div class="container">
         <div class="header">
             <img src="veygo_logo.png" alt="Veygo Logo">
-            <h1>Thanks Abdullah!</h1>
+            <h1>Thanks <%= name %>!</h1>
             <p>You have successfully purchased temporary car insurance through Veygo.</p>
         </div>
         <a href="#" class="button">Thank you for taking out Temporary Car Insurance through Veygo.</a>
@@ -131,13 +133,13 @@ const emailBody = `
 
         <div class="policy-details">
             <div class="policy-details-column">
-                <p><strong>Policyholder</strong><br>Mr Abdullah Humam<br>Mezenner</p>
-                <p><strong>Vehicle details</strong><br>OE69KFZ (BMW 330E SENPRO AUTO)</p>
+                <p><strong>Policyholder</strong><br><%= policyholder_name %><br><%= address %></p>
+                <p><strong>Vehicle details</strong><br><%= vehicle_registration %> (<%= vehicle_model %>)</p>
             </div>
             <div class="policy-details-column">
-                <p><strong>Cover from:</strong> July 6th, 2024, 17:30pm</p>
-                <p><strong>Cover to:</strong> July 7th, 2024, 17:30pm</p>
-                <p><strong>Premium paid:</strong> £113.42</p>
+                <p><strong>Cover from:</strong> <%= cover_start %></p>
+                <p><strong>Cover to:</strong> <%= cover_end %></p>
+                <p><strong>Premium paid:</strong> £<%= premium %></p>
                 <p>Price includes Insurance Premium Tax at 12%</p>
             </div>
         </div>
@@ -160,24 +162,26 @@ const emailBody = `
         </div>
     </div>
     <div class="container">
-        <h1>Thanks Abdullah!</h1>
+        <h1>Thanks <%= name %>!</h1>
         <h2>Thank you for taking out Temporary Car Insurance through Veygo.</h2>
 
         <p>There are some important details and useful facts in this email that will keep you informed about your policy.</p>
 
         <h2>Your policy details</h2>
-        <p><strong>Policyholder:</strong> Mr Abdullah Humam</p>
-        <p><strong>Vehicle:</strong> OE6SKFZ (BMW 330E)</p>
-        <p><strong>Cover from:</strong> July 7th, 2024, 17:00pm</p>
-        <p><strong>Cover to:</strong> July 8th, 2024, 17:30pm</p>
-        <p><strong>Premium paid:</strong> £113.42</p>
+        <p><strong>Policyholder:</strong> <%= policyholder_name %></p>
+        <p><strong>Vehicle:</strong> <%= vehicle_registration %> (<%= vehicle_model %>)</p>
+        <p><strong>Cover from:</strong> <%= cover_start %></p>
+        <p><strong>Cover to:</strong> <%= cover_end %></p>
+        <p><strong>Premium paid:</strong> £<%= premium %></p>
 
         <a href="#" class="button">View Policy Booklet</a>
         <a href="#" class="button">Check Your Documents</a>
 
         <h2>Important information about paying for your policy</h2>
-        <p>...</p> <h2>Contacting us about incidents</h2>
-        <p>...</p> </div>
+        <p>...</p> 
+        <h2>Contacting us about incidents</h2>
+        <p>...</p> 
+    </div>
 </body>
 </html>
 `;
