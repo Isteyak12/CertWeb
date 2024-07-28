@@ -1,0 +1,14 @@
+services:
+  - type: web
+    name: veygo-insurance-automation
+    env: node
+    plan: free
+    buildCommand: 'npm install'
+    startCommand: 'node server.js'
+    envVars:
+      - key: EMAIL_USER
+        value: your-email@gmail.com
+      - key: EMAIL_PASS
+        value: your-email-password
+      - key: PORT
+        value: 3001
