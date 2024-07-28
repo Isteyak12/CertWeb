@@ -70,5 +70,4 @@ To run the project locally, follow these steps:
 -does env var not exist when uploading it to github
 -deployment issue with env var set within host system(not sure if it can be within github upload)
 
-Alternate web link: https://certifierapp.netlify.app/
 
