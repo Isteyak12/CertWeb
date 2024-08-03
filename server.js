@@ -233,8 +233,8 @@ app.get("/execute-app", (req, res) => {
   res.redirect("/auth/sign.html");
 });
 
-// Function to remove all PDF files in the root directory
-const clearPDFs = () => {
+// Function to remove all PDF files in the root directory except the new one
+const clearPDFs = (newFileName) => {
   const dir = __dirname;
   fs.readdir(dir, (err, files) => {
     if (err) {
@@ -242,10 +242,12 @@ const clearPDFs = () => {
       return;
     }
     files.forEach((file) => {
-      if (file.endsWith(".pdf")) {
+      if (file.endsWith(".pdf") && file !== newFileName) {
         fs.unlink(path.join(dir, file), (err) => {
           if (err) {
             console.error("Error deleting file:", file, err);
+          } else {
+            console.log(`Deleted file: ${file}`);
           }
         });
       }
@@ -255,10 +257,11 @@ const clearPDFs = () => {
 
 // Endpoint to save PDF
 app.post("/save-pdf", upload.single("pdf"), (req, res) => {
-  clearPDFs(); // Clear existing PDFs first
-
   const tempPath = req.file.path;
   const targetPath = path.join(__dirname, `${req.file.originalname}`);
+
+  // Clear existing PDFs first, except the one being uploaded
+  clearPDFs(req.file.originalname);
 
   fs.rename(tempPath, targetPath, (err) => {
     if (err) {
@@ -268,6 +271,7 @@ app.post("/save-pdf", upload.single("pdf"), (req, res) => {
     res.send("PDF saved successfully");
   });
 });
+
 // Endpoint to check authentication status
 app.get("/check-authentication", (req, res) => {
   if (req.session && req.session.isAuthenticated) {
