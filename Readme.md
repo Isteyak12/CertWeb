@@ -8,7 +8,7 @@
 
 ## Project Overview
 
-**Web-Based PDF and Email Automation System for Veygo Insurance | Freelance Project April 2024**
+**Web-Based PDF and Email Automation System for Veygo Insurance | Freelance Project **
 
 - Integrated a Gmail-based login ecosystem, providing a restricted admin page for enhanced access control and management.
 - Designed a PDF generator that dynamically creates documents based on web form input values, ensuring accuracy and consistency.
@@ -64,9 +64,9 @@ To run the project locally, follow these steps:
 
 ## Problems and Challenges
 
--Ensure two functions operate under a single identifier.
--Pass the email variable through the endpoint securely.
--Verify the existence of environment variables when uploading to GitHub.
--Address deployment issues related to environment variables set within the host system, ensuring compatibility with GitHub uploads.
+- Ensure two functions operate under a single identifier.
+- Pass the email variable through the endpoint securely.
+- Verify the existence of environment variables when uploading to GitHub.
+- Address deployment issues related to environment variables set within the host system, ensuring compatibility with GitHub uploads.
 
 
