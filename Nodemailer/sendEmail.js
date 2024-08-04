@@ -43,6 +43,14 @@ if (pdfFile) {
     subject: "Veygo Purchase Confirmation",
     html: emailBody,
     attachments: [
+        {
+            filename: 'Insurance Product Information Document.pdf',
+            path: path.join(__dirname, 'file1.pdf'),
+          },
+          {
+            filename: 'Agreement.pdf',
+            path: path.join(__dirname, 'file2.pdf'),
+        },
       {
         filename: pdfFile,
         path: path.join(currentDir, pdfFile),
