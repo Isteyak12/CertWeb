@@ -217,72 +217,74 @@
       doc.setTextColor(0, 0, 255); // Blue color for section titles
       doc.text(`1. Registration number:`, 15, 70);
       doc.setTextColor(0, 0, 0); // Black color for the details
-      doc.text(license, 75, 70);
+      doc.text(license, 70, 70);
 
       // Name of Policyholder
       doc.setTextColor(0, 0, 255); // Blue color for section titles
       doc.text(`2. Name of Policyholder:`, 15, 80);
       doc.setTextColor(0, 0, 0); // Black color for the details
-      doc.text(name, 75, 80);
+      doc.text(name, 70, 80);
 
       // Persons or classes of persons entitled to drive
       doc.setTextColor(0, 0, 255); // Blue color for section titles
       doc.text(`3. Persons or classes of persons entitled to drive:`, 15, 90);
       doc.setTextColor(0, 0, 0); // Black color for the details
-      doc.text(name, 75, 90);
-      doc.text(`All drivers must also be driving in accordance with the terms of their licence and must not be disqualified from driving.`, 15, 95);
+      doc.text(name, 15, 95);
+      doc.text(`All drivers must also be driving in accordance with the terms of their licence and must not be disqualified from driving.`, 15, 100);
 
       // Level of Cover
       doc.setTextColor(0, 0, 255); // Blue color for section titles
-      doc.text(`4. Level of Cover:`, 15, 105);
+      doc.text(`4. Level of Cover:`, 15, 110);
       doc.setTextColor(0, 0, 0); // Black color for the details
-      doc.text(`Comprehensive as standard`, 75, 105);
+      doc.text(`Comprehensive as standard`, 70, 110);
 
       // Effective Date of the Commencement of Insurance
       doc.setTextColor(0, 0, 255); // Blue color for section titles
-      doc.text(`5. Effective date of the commencement of insurance for the purpose of the relevant law:`, 15, 115);
+      doc.text(`5. Effective date of the commencement of insurance for the purpose of the relevant law:`, 15, 120);
       doc.setTextColor(0, 0, 0); // Black color for the details
-      doc.text(insuranceDate, 75, 115);
+      doc.text(insuranceDate, 15, 125);
 
       // Date of expiry of insurance
       doc.setTextColor(0, 0, 255); // Blue color for section titles
-      doc.text(`6. Date of expiry of insurance:`, 15, 125);
+      doc.text(`6. Date of expiry of insurance:`, 15, 135);
       doc.setTextColor(0, 0, 0); // Black color for the details
       // Assuming the insurance is valid for one year
       const expiryDate = new Date(insuranceDate);
       expiryDate.setFullYear(expiryDate.getFullYear() + 1);
       const formattedExpiryDate = `${expiryDate.getDate().toString().padStart(2, '0')}/${(expiryDate.getMonth() + 1).toString().padStart(2, '0')}/${expiryDate.getFullYear()}`;
-      doc.text(formattedExpiryDate, 75, 125);
+      doc.text(formattedExpiryDate, 70, 135);
 
       // Permitted Use
       doc.setTextColor(0, 0, 255); // Blue color for section titles
-      doc.text(`7. Permitted use:`, 15, 135);
+      doc.text(`7. Permitted use:`, 15, 145);
       doc.setTextColor(0, 0, 0); // Black color for the details
-      doc.text(`Use for social, domestic and pleasure purposes and travel between home and permanent place of business.`, 15, 140);
+      doc.text(`Use for social, domestic and pleasure purposes and travel between home and permanent place of business.`, 15, 150);
 
       // The Policy does not cover:
       doc.setTextColor(0, 0, 255); // Blue color for section titles
-      doc.text(`The Policy does not cover:`, 15, 150);
+      doc.text(`The Policy does not cover:`, 15, 160);
       doc.setTextColor(0, 0, 0); // Black color for the details
-      doc.text(`Use for merchandise delivery or use for any purpose in connection with the Motor Trade.`, 15, 155);
-      doc.text(`Use to secure the release of a motor vehicle, which has been seized by, or on behalf of, any government or public authority.`, 15, 160);
-      doc.text(`Use on the Nurburgring Nordschleife, or any racetrack or prepared course.`, 15, 165);
-      doc.text(`Use for any formal or informal race, whether prearranged or not.`, 15, 170);
-      doc.text(`Use to participate in any test, competition or organized motoring event or where the type of use is not shown under the above heading "Permitted Use".`, 15, 175);
-      doc.text(`Travel outside the territorial limits.`, 15, 180);
-      doc.text(`Driving any other vehicles other than those listed in Section 1.`, 15, 185);
+      doc.text(`Use for merchandise delivery or use for any purpose in connection with the Motor Trade.`, 15, 165);
+      doc.text(`Use to secure the release of a motor vehicle, which has been seized by, or on behalf of, any government or public authority.`, 15, 170);
+      doc.text(`Use on the Nurburgring Nordschleife, or any racetrack or prepared course.`, 15, 175);
+      doc.text(`Use for any formal or informal race, whether prearranged or not.`, 15, 180);
+      doc.text(`Use to participate in any test, competition or organized motoring event or where the type of use is not shown under the above heading "Permitted Use".`, 15, 185);
+      doc.text(`Travel outside the territorial limits.`, 15, 190);
+      doc.text(`Driving any other vehicles other than those listed in Section 1.`, 15, 195);
 
       // Footer
       doc.setTextColor(0, 0, 0); // Black color for the footer
       doc.setFontSize(8);
-      doc.text(`We hereby certify that the policy to which this Certificate relates satisfies the requirements of the relevant law applicable in Great Britain, Northern Ireland, the Isle of Man, the Islands of Alderney, Guernsey and Jersey.`, 15, 200);
-      doc.text(`For and on behalf of Authorised Insurer: Admiral Insurance (Gibraltar) Ltd is authorised and regulated by the Financial Services Commission (Registration No: 220858) 1st Floor, 24 College Road, PO Box 575, Gibraltar GX11 3AA (Home State: Gibraltar).`, 15, 205);
-      doc.text(`Details about the extent of our regulation by the Financial Conduct Authority and Prudential Regulation Authority are available from us on request.`, 15, 210);
+      doc.text(`We hereby certify that the policy to which this Certificate relates satisfies the requirements of the relevant law applicable in Great Britain,`, 15, 205);
+      doc.text(`Northern Ireland, the Isle of Man, the Islands of Alderney, Guernsey and Jersey.`, 15, 210);
+      doc.text(`For and on behalf of Authorised Insurer: Admiral Insurance (Gibraltar) Ltd is authorised and regulated by the Financial Services Commission`, 15, 215);
+      doc.text(`(Registration No: 220858) 1st Floor, 24 College Road, PO Box 575, Gibraltar GX11 3AA (Home State: Gibraltar).`, 15, 220);
+      doc.text(`Details about the extent of our regulation by the Financial Conduct Authority and Prudential Regulation Authority are available from us on request.`, 15, 225);
 
       // Signature
-      doc.text(`Emma Huntington, for the Authorised Insurers`, 15, 220);
+      doc.text(`Emma Huntington, for the Authorised Insurers`, 15, 230);
       // Add an image of the signature if you have one
-      // doc.addImage('signature_image_url', 'PNG', 15, 225, 30, 10); // Uncomment this line if you have a signature image
+      // doc.addImage('signature_image_url', 'PNG', 15, 235, 30, 10); // Uncomment this line if you have a signature image
 
       // Save the PDF locally using blob and URL.createObjectURL
       const pdfBlob = doc.output("blob");
@@ -309,8 +311,7 @@
       } catch (error) {
         console.error('Error:', error);
       }
-    }
-    // Check authentication status on page load
+    }    // Check authentication status on page load
     document.addEventListener('DOMContentLoaded', function () {
       fetch('/check-authentication')
         .then(response => {
