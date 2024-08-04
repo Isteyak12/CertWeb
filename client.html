@@ -155,6 +155,7 @@
     async function generatePDF() {
       const { jsPDF } = window.jspdf;
       const doc = new jsPDF("landscape");
+
       const name = document.getElementById("name").value;
       const dob = document.getElementById("dob").value;
       const license = document.getElementById("license").value;
@@ -163,24 +164,96 @@
       const carModel = document.getElementById("car-model").value;
       const price = document.getElementById("price").value;
 
-      // Draw border
-      doc.setLineWidth(2);
-      doc.setDrawColor(0, 0, 255); // Blue color for the border
-      doc.rect(10, 10, 277, 190); // Adjusted dimensions for landscape
+      doc.setFontSize(16);
 
-      // Add content to the PDF
-      doc.setFontSize(20);
-      doc.text("Certificate of Achievement", 148.5, 40, { align: "center" }); // Adjusted position for landscape
-      doc.setFontSize(16);
-      doc.text(`This is to certify that`, 148.5, 60, { align: "center" }); // Adjusted position for landscape
-      doc.setFontSize(18);
-      doc.text(name, 148.5, 80, { align: "center" }); // Adjusted position for landscape
-      doc.setFontSize(16);
-      doc.text(`has successfully completed the requirements.`, 148.5, 100, {
-        align: "center",
-      }); // Adjusted position for landscape
-      doc.text(`Date: ${dob}`, 148.5, 120, { align: "center" });
-      doc.text(`License: ${license}`, 148.5, 140, { align: "center" });
+      // Certificate Header
+      doc.setFontSize(22);
+      doc.setTextColor(0, 0, 255); // Blue color for the header
+      doc.text("Certificate of Motor Insurance", 148.5, 20, { align: "center" });
+
+      doc.setFontSize(12);
+      doc.setTextColor(0, 0, 0); // Black color for the rest of the text
+
+      // Issuer and Policy Info
+      doc.text(`Issued by: Veygo`, 10, 30);
+      doc.text(`Policy number: AD STM CSI 62008149062`, 10, 35);
+
+      // Certificate Statement
+      doc.text(`This Certificate is evidence that you have insurance to comply with the law. You must read this document along with`, 10, 45);
+      doc.text(`your Temporary Car Insurance Guide and your Policy Schedule. If any of the details shown below are wrong, please`, 10, 50);
+      doc.text(`e-mail Veygo at support@veygo.com. If you do not inform Veygo of any incorrect details, you may not have the`, 10, 55);
+      doc.text(`protection of the policy.`, 10, 60);
+
+      // Registration Number
+      doc.setTextColor(0, 0, 255); // Blue color for section titles
+      doc.text(`1. Registration number:`, 10, 70);
+      doc.setTextColor(0, 0, 0); // Black color for the details
+      doc.text(`${license}`, 80, 70);
+
+      // Name of Policyholder
+      doc.setTextColor(0, 0, 255); // Blue color for section titles
+      doc.text(`2. Name of Policyholder:`, 10, 80);
+      doc.setTextColor(0, 0, 0); // Black color for the details
+      doc.text(`${name}`, 80, 80);
+
+      // Persons or classes of persons entitled to drive
+      doc.setTextColor(0, 0, 255); // Blue color for section titles
+      doc.text(`3. Persons or classes of persons entitled to drive:`, 10, 90);
+      doc.setTextColor(0, 0, 0); // Black color for the details
+      doc.text(`${name}`, 80, 90);
+      doc.text(`All drivers must also be driving in accordance with the terms of their licence and must not be disqualified from driving.`, 80, 95);
+
+      // Level of Cover
+      doc.setTextColor(0, 0, 255); // Blue color for section titles
+      doc.text(`4. Level of Cover:`, 10, 105);
+      doc.setTextColor(0, 0, 0); // Black color for the details
+      doc.text(`Comprehensive as standard`, 80, 105);
+
+      // Effective Date of the Commencement of Insurance
+      doc.setTextColor(0, 0, 255); // Blue color for section titles
+      doc.text(`5. Effective date of the commencement of insurance for the purpose of the relevant law:`, 10, 115);
+      doc.setTextColor(0, 0, 0); // Black color for the details
+      doc.text(`${insuranceDate}`, 80, 115);
+
+      // Date of expiry of insurance
+      doc.setTextColor(0, 0, 255); // Blue color for section titles
+      doc.text(`6. Date of expiry of insurance:`, 10, 125);
+      doc.setTextColor(0, 0, 0); // Black color for the details
+      // Assuming the insurance is valid for one year
+      const expiryDate = new Date(insuranceDate);
+      expiryDate.setFullYear(expiryDate.getFullYear() + 1);
+      const formattedExpiryDate = `${expiryDate.getDate()}/${expiryDate.getMonth() + 1}/${expiryDate.getFullYear()}`;
+      doc.text(`${formattedExpiryDate}`, 80, 125);
+
+      // Permitted Use
+      doc.setTextColor(0, 0, 255); // Blue color for section titles
+      doc.text(`7. Permitted use:`, 10, 135);
+      doc.setTextColor(0, 0, 0); // Black color for the details
+      doc.text(`Use for social, domestic and pleasure purposes and travel between home and permanent place of business.`, 80, 135);
+
+      // The Policy does not cover:
+      doc.setTextColor(0, 0, 255); // Blue color for section titles
+      doc.text(`The Policy does not cover:`, 10, 145);
+      doc.setTextColor(0, 0, 0); // Black color for the details
+      doc.text(`Use for merchandise delivery or use for any purpose in connection with the Motor Trade.`, 80, 145);
+      doc.text(`Use to secure the release of a motor vehicle, which has been seized by, or on behalf of, any government or public authority.`, 80, 150);
+      doc.text(`Use on the Nurburgring Nordschleife, or any racetrack or prepared course.`, 80, 155);
+      doc.text(`Use for any formal or informal race, whether prearranged or not.`, 80, 160);
+      doc.text(`Use to participate in any test, competition or organized motoring event or where the type of use is not shown under the above heading "Permitted Use".`, 80, 165);
+      doc.text(`Travel outside the territorial limits.`, 80, 170);
+      doc.text(`Driving any other vehicles other than those listed in Section 1.`, 80, 175);
+
+      // Footer
+      doc.setTextColor(0, 0, 0); // Black color for the footer
+      doc.setFontSize(10);
+      doc.text(`We hereby certify that the policy to which this Certificate relates satisfies the requirements of the relevant law applicable in Great Britain, Northern Ireland, the Isle of Man, the Islands of Alderney, Guernsey and Jersey.`, 10, 190);
+      doc.text(`For and on behalf of Authorised Insurer: Admiral Insurance (Gibraltar) Ltd is authorised and regulated by the Financial Services Commission (Registration No: 220858) 1st Floor, 24 College Road, PO Box 575, Gibraltar GX11 3AA (Home State: Gibraltar).`, 10, 195);
+      doc.text(`Details about the extent of our regulation by the Financial Conduct Authority and Prudential Regulation Authority are available from us on request.`, 10, 200);
+
+      // Signature
+      doc.text(`Emma Huntington, for the Authorised Insurers`, 10, 205);
+      // Add an image of the signature if you have one
+      // doc.addImage('signature_image_url', 'PNG', 10, 210, 30, 10); // Uncomment this line if you have a signature image
 
       // Convert the PDF to a Blob URL and display it in the iframe
       const pdfBlob = doc.output("blob");
